@@ -10,7 +10,7 @@ export default function Hero() {
       }}
     >
       <div className="container">
-        <h1 className="fw-bold display-4">Rezervujte si športovisko online</h1>
+        <h1 className="fw-bold display-4">Rezervujte si športovisko  online</h1>
         <p className="lead">Vyberte si športovisko a rezervujte si termín rýchlo a jednoducho</p>
       </div>
     </div>
