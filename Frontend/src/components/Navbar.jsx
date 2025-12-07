@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
@@ -16,8 +18,8 @@ export default function Navbar() {
           </ul>
 
           <div>
-            <button className="btn btn-outline-danger me-2">Prihlásiť sa</button>
-            <button className="btn btn-warning">Registrácia</button>
+            <Link className="btn btn-outline-danger me-2" to="/Login">Prihlásiť sa</Link>
+            <Link className="btn btn-warning" to="/Register">Registrácia</Link>
           </div>
         </div>
       </div>
