@@ -1,0 +1,111 @@
+/* HERO */
+/* Tmavý border okolo banera */
+.hero-banner {
+    border: 5px solid black; 
+    height: 380px; 
+}
+/* Pozadie aby text bol čiteteľnejší */
+.banner-title {
+    color: black !important; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
+    padding: 10px; 
+    background-color: rgba(255, 255, 255, 0.6); 
+    border-radius: 10px;
+    display: inline-block; 
+}
+
+.banner-subtitle {
+    /* Zmení farbu podnadpisu na čiernu */
+    color: black !important; 
+    
+    /* Pridá tieň textu */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); 
+    
+    /* Pozadie - pre lepšiu čitateľnosť na obrázku */
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    
+    /* Mierne oddelenie od h1 */
+    margin-top: 10px; 
+}
+
+/* FAVORITES */
+.sport-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+    overflow: hidden; /* Zabezpečí, že zaoblenie funguje aj na obrázku */
+    border-radius: 10px !important; /* Zaoblenie rohov */
+}
+
+/* Efekt pri prejdení myšou */
+.sport-card:hover {
+    transform: translateY(-5px); /* Karta sa mierne posunie hore */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Výraznejší tieň */
+}
+
+/* Kontajner na obrázok pre fallback */
+.card-img-container {
+    height: 155px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Štýl pre fallback text, ak sa obrázok nenačíta */
+.img-fallback {
+    position: absolute;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+
+}
+
+/* Mierne vylepšenie textu v tele karty */
+.sport-card .card-body {
+    padding: 1rem;
+}
+
+/*Text pod obrazkom pri favorites */
+.sport-card .card-title {
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    color: #333; 
+}
+
+/* Zabezpečí, že obrázok má zaoblené horné rohy, ak je to potrebné */
+.sport-img {
+    width: 100%;
+    object-fit: cover;
+}
+
+/* FEATURES */
+/* Text vedla icony */
+.feature-title {
+    margin-bottom: 0.5rem; 
+    font-weight: 600; 
+    color: #333; 
+    font-size: 1.25rem; 
+}
+
+/* Icony */
+.feature-icon {
+    margin-right: 8px; 
+    font-size: 1.5rem; 
+    line-height: 1; 
+}
+/* Text pod iconou  */
+.feature-text {
+    color: #000000; 
+    line-height: 1.6; 
+    max-width: 300px; 
+    margin-top: 5px; 
+    font-family: comic sans ms;
+    text-align: justify;
+}
