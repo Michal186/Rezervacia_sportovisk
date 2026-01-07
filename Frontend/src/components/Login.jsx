@@ -64,13 +64,20 @@ function Login({ onLoginSuccess }) {
 
         // Úspešné prihlásenie: Získame token
         const token = data.token;
+        const role = data.user.rola;
+
         localStorage.setItem('userToken', token);
+        localStorage.setItem('isLoggedIn', 'true');
+
+        
+        localStorage.setItem("userRole", role);
+
         
         // Vykonáme presmerovanie alebo callback
         if (onLoginSuccess) {
             onLoginSuccess(token); 
         } else {
-            // Predvolené presmerovanie, napr. na domovskú stránku
+            // Predvolené presmerovanie, napr. na domovskú stránku      NAVIGATE
             navigate('/');
             console.log("Prihlásenie úspešné, token uložený.");
         }
