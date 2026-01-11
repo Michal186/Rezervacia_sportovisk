@@ -25,15 +25,19 @@ export default function AdminEdit() {
                   <div className="border rounded-3 p-4 h-100 text-center">
                     <h5 className="fw-bold">Športoviská</h5>
                     <p className="text-muted">Pridanie, úprava a mazanie športovísk</p>
-                    <button className="btn btn-outline-danger w-100">Spravovať</button>
+                    <button className="btn btn-outline-danger w-100"
+                    onClick={() => navigate("/sportoviskoedit")}
+                    >Spravovať</button>
                   </div>
                 </div>
 
                 <div className="col-md-4">
                   <div className="border rounded-3 p-4 h-100 text-center">
-                    <h5 className="fw-bold">Rezervácie</h5>
-                    <p className="text-muted">Prehľad a správa rezervácií</p>
-                    <button className="btn btn-outline-danger w-100">Zobraziť</button>
+                    <h5 className="fw-bold">Termíny</h5>
+                    <p className="text-muted">Prehľad a správa termínov</p>
+                    <button className="btn btn-outline-danger w-100"
+                    onClick={() => navigate("/calendaredit")}
+                    >Spravovať</button>
                   </div>
                 </div>
 
@@ -41,7 +45,9 @@ export default function AdminEdit() {
                   <div className="border rounded-3 p-4 h-100 text-center">
                     <h5 className="fw-bold">Používatelia</h5>
                     <p className="text-muted">Role a správa používateľov</p>
-                    <button className="btn btn-outline-danger w-100">Upraviť</button>
+                    <button className="btn btn-outline-danger w-100"
+                    onClick={() => navigate("/customeredit")}
+                    >Spravovať</button>
                   </div>
                 </div>
               </div>
