@@ -13,8 +13,6 @@ export default function CalendarEdit() {
   const [sportoviska, setSportoviska] = useState([]);
   const [selectedSportovisko, setSelectedSportovisko] = useState("");
   const [terminy, setTerminy] = useState([]);
-  
-  // Stav pre editáciu
   const [editingId, setEditingId] = useState(null);
 
   const [form, setForm] = useState({
@@ -23,16 +21,27 @@ export default function CalendarEdit() {
     cas_do: "",
   });
 
-  /* =========================
-      ADMIN OCHRANA
-  ========================= */
+  // Pomocná funkcia na formátovanie času (odstránenie sekúnd HH:mm:ss -> HH:mm)
+  const formatTime = (time) => {
+    if (!time) return "";
+    return time.split(":").slice(0, 2).join(":");
+  };
+
+  // Štýl futuristického pozadia
+  const backgroundStyle = {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://bigthink.com/wp-content/uploads/2022/12/AdobeStock_173668487.jpeg?w=3200')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
+    minHeight: "100vh",
+    width: "100%",
+    color: "#fff"
+  };
+
   useEffect(() => {
     if (role !== "admin") navigate("/");
   }, [role, navigate]);
 
-  /* =========================
-      NAČÍTANIE ŠPORTOVÍSK
-  ========================= */
   useEffect(() => {
     fetchSportoviska();
   }, []);
@@ -49,9 +58,6 @@ export default function CalendarEdit() {
     }
   };
 
-  /* =========================
-      NAČÍTANIE TERMÍNOV
-  ========================= */
   useEffect(() => {
     if (selectedSportovisko) fetchTerminy();
   }, [selectedSportovisko]);
@@ -68,12 +74,8 @@ export default function CalendarEdit() {
     }
   };
 
-  /* =========================
-      SUBMIT (CREATE ALEBO UPDATE)
-  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const method = editingId ? "PUT" : "POST";
     const url = editingId ? `${TERMINY_API}/${editingId}` : TERMINY_API;
 
@@ -100,17 +102,13 @@ export default function CalendarEdit() {
     }
   };
 
-  /* =========================
-      EDIT REŽIM
-  ========================= */
   const startEdit = (t) => {
     setEditingId(t.id);
-    // Ošetrenie formátu dátumu (aby ho HTML input typu date vedel prečítať)
     const formattedDate = t.datum ? t.datum.split('T')[0] : "";
     setForm({
       datum: formattedDate,
-      cas_od: t.cas_od,
-      cas_do: t.cas_do,
+      cas_od: formatTime(t.cas_od),
+      cas_do: formatTime(t.cas_do),
     });
   };
 
@@ -119,9 +117,6 @@ export default function CalendarEdit() {
     setForm({ datum: "", cas_od: "", cas_do: "" });
   };
 
-  /* =========================
-      DELETE
-  ========================= */
   const handleDelete = async (id) => {
     if (!window.confirm("Naozaj chceš vymazať termín?")) return;
     try {
@@ -136,123 +131,152 @@ export default function CalendarEdit() {
   };
 
   return (
-    <div className="container py-5">
-      <h1 className="fw-bold mb-4">Správa termínov</h1>
+    <div style={backgroundStyle}>
+      <div className="container py-5 text-dark">
+        <h1 className="fw-bold mb-4 text-white" style={{ textShadow: "2px 2px 8px rgba(0,0,0,0.8)" }}>
+          <i className="bi bi-calendar-event me-2"></i>Správa termínov
+        </h1>
 
-      {/* VÝBER ŠPORTOVISKA */}
-      <div className="card shadow-sm p-4 mb-4">
-        <label className="form-label fw-bold">Vyber športovisko</label>
-        <select
-          className="form-select"
-          value={selectedSportovisko}
-          onChange={(e) => {
-            setSelectedSportovisko(e.target.value);
-            cancelEdit();
-          }}
-        >
-          <option value="">-- vyber --</option>
-          {sportoviska.map((s) => (
-            <option key={s.id} value={s.id}>{s.nazov} – {s.lokalita}</option>
-          ))}
-        </select>
-      </div>
+        {/* VÝBER ŠPORTOVISKA */}
+        <div className="card shadow border-0 bg-white bg-opacity-95 p-4 mb-4 rounded-4">
+          <label className="form-label fw-bold">Vyber športovisko pre správu kalendára</label>
+          <select
+            className="form-select form-select-lg"
+            value={selectedSportovisko}
+            onChange={(e) => {
+              setSelectedSportovisko(e.target.value);
+              cancelEdit();
+            }}
+          >
+            <option value="">-- Vyberte zo zoznamu --</option>
+            {sportoviska.map((s) => (
+              <option key={s.id} value={s.id}>{s.nazov} – {s.lokalita}</option>
+            ))}
+          </select>
+        </div>
 
-      {/* FORMULÁR */}
-      {selectedSportovisko && (
-        <form onSubmit={handleSubmit} className={`card shadow-sm p-4 mb-5 ${editingId ? 'border-primary' : ''}`}>
-          <h5 className="mb-3">{editingId ? "Upraviť termín" : "Pridať nový termín"}</h5>
-          <div className="row g-3">
-            <div className="col-md-4">
-              <input
-                type="date"
-                className="form-control"
-                value={form.datum}
-                onChange={(e) => setForm({ ...form, datum: e.target.value })}
-                required
-              />
-            </div>
-            <div className="col-md-3">
-              <input
-                type="time"
-                className="form-control"
-                value={form.cas_od}
-                onChange={(e) => setForm({ ...form, cas_od: e.target.value })}
-                required
-              />
-            </div>
-            <div className="col-md-3">
-              <input
-                type="time"
-                className="form-control"
-                value={form.cas_do}
-                onChange={(e) => setForm({ ...form, cas_do: e.target.value })}
-                required
-              />
-            </div>
-            <div className="col-md-2 d-grid gap-2">
-              <button type="submit" className={`btn ${editingId ? 'btn-primary' : 'btn-danger'}`}>
-                {editingId ? "Uložiť" : "Pridať"}
-              </button>
-              {editingId && (
-                <button type="button" className="btn btn-outline-secondary" onClick={cancelEdit}>
-                  Zrušiť
-                </button>
+        {/* FORMULÁR - ZOSTÁVA BIELY PRI EDITÁCII */}
+        {selectedSportovisko && (
+          <form 
+            onSubmit={handleSubmit} 
+            className={`card shadow border-0 p-4 mb-5 rounded-4 animate__animated animate__fadeIn bg-white ${
+              editingId ? 'border-start border-primary border-5' : ''
+            }`}
+            style={editingId ? { boxShadow: "inset 0 0 15px rgba(0,123,255,0.05)" } : {}}
+          >
+            <h5 className="mb-3 fw-bold">
+              {editingId ? (
+                <>
+                  <i className="bi bi-pencil-square text-primary me-2"></i>
+                  <span className="text-primary">Upraviť existujúci termín</span>
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-plus-circle me-2"></i>
+                  Pridať nový termín
+                </>
               )}
+            </h5>
+            <div className="row g-3">
+              <div className="col-md-4">
+                <label className="small fw-bold">Dátum</label>
+                <input
+                  type="date"
+                  className="form-control shadow-sm"
+                  value={form.datum}
+                  onChange={(e) => setForm({ ...form, datum: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="col-md-3">
+                <label className="small fw-bold">Čas od</label>
+                <input
+                  type="time"
+                  className="form-control shadow-sm"
+                  value={form.cas_od}
+                  onChange={(e) => setForm({ ...form, cas_od: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="col-md-3">
+                <label className="small fw-bold">Čas do</label>
+                <input
+                  type="time"
+                  className="form-control shadow-sm"
+                  value={form.cas_do}
+                  onChange={(e) => setForm({ ...form, cas_do: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="col-md-2 d-grid gap-2 align-self-end">
+                <button type="submit" className={`btn fw-bold shadow-sm ${editingId ? 'btn-primary' : 'btn-danger'}`}>
+                  {editingId ? "Uložiť zmeny" : "Pridať termín"}
+                </button>
+                {editingId && (
+                  <button type="button" className="btn btn-outline-secondary btn-sm" onClick={cancelEdit}>
+                    Zrušiť
+                  </button>
+                )}
+              </div>
+            </div>
+          </form>
+        )}
+
+        {/* TABUĽKA TERMÍNOV */}
+        {selectedSportovisko && (
+          <div className="card shadow border-0 rounded-4 overflow-hidden bg-white bg-opacity-95 shadow-lg">
+            <div className="table-responsive">
+              <table className="table table-hover align-middle mb-0">
+                <thead className="table-dark text-uppercase small">
+                  <tr>
+                    <th className="ps-4 py-3">Dátum</th>
+                    <th className="py-3">Od</th>
+                    <th className="py-3">Do</th>
+                    <th className="text-end pe-4 py-3">Akcie</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {terminy.map((t) => (
+                    <tr key={t.id} className={editingId === t.id ? "table-light border-start border-primary border-4" : ""}>
+                      <td className="ps-4 fw-bold">{new Date(t.datum).toLocaleDateString("sk-SK")}</td>
+                      <td><span className="badge bg-light text-dark border px-3 py-2">{formatTime(t.cas_od)}</span></td>
+                      <td><span className="badge bg-light text-dark border px-3 py-2">{formatTime(t.cas_do)}</span></td>
+                      <td className="text-end pe-4">
+                        <button
+                          className="btn btn-sm btn-outline-primary me-2 px-3"
+                          onClick={() => startEdit(t)}
+                        >
+                          <i className="bi bi-pencil me-1"></i> Upraviť
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger px-3"
+                          onClick={() => handleDelete(t.id)}
+                        >
+                          <i className="bi bi-trash me-1"></i> Zmazať
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {terminy.length === 0 && (
+                    <tr>
+                      <td colSpan="4" className="text-muted text-center py-5">
+                        <i className="bi bi-info-circle me-2"></i>Žiadne voľné termíny pre toto športovisko
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
-        </form>
-      )}
+        )}
 
-      {/* TABUĽKA TERMÍNOV */}
-      {selectedSportovisko && (
-        <div className="table-responsive">
-          <table className="table table-hover shadow-sm align-middle">
-            <thead>
-              <tr>
-                <th>Dátum</th>
-                <th>Od</th>
-                <th>Do</th>
-                <th className="text-end">Akcie</th>
-              </tr>
-            </thead>
-            <tbody>
-              {terminy.map((t) => (
-                <tr key={t.id} className={editingId === t.id ? "table-primary" : ""}>
-                  <td>{new Date(t.datum).toLocaleDateString("sk-SK")}</td>
-                  <td>{t.cas_od}</td>
-                  <td>{t.cas_do}</td>
-                  <td className="text-end">
-                    <button
-                      className="btn btn-sm btn-outline-primary me-2"
-                      onClick={() => startEdit(t)}
-                    >
-                      Upraviť
-                    </button>
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => handleDelete(t.id)}
-                    >
-                      Zmazať
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {terminy.length === 0 && (
-                <tr>
-                  <td colSpan="4" className="text-muted text-center">Žiadne termíny</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <button
-        className="btn btn-secondary mt-4"
-        onClick={() => navigate("/adminedit")}
-      >
-        Späť
-      </button>
+        <button
+          className="btn btn-secondary mt-4 px-4 shadow rounded-pill"
+          onClick={() => navigate("/adminedit")}
+        >
+          <i className="bi bi-arrow-left me-2"></i>Späť do panelu administrátora
+        </button>
+      </div>
     </div>
   );
 }

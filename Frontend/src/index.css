@@ -114,7 +114,8 @@
 
 /* REZERVACIA */
 
-/* Pridaj si do index.css alebo App.css */
+
+
 
 .sportovisko-card {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -151,3 +152,16 @@
 .gallery-hover:hover .gallery-overlay {
   opacity: 1;
 }
+
+/* RECENZIE - HOMEPAGE */
+
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+

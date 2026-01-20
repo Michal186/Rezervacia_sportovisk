@@ -16,11 +16,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
+
 /* =========================
    AUTH MIDDLEWARE
 ========================= */
-
-// Overenie JWT
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -34,12 +33,12 @@ const verifyToken = (req, res, next) => {
       return res.status(403).json({ message: "Neplatný token" });
     }
 
-    req.user = decoded; // { id, rola }
+    req.user = decoded; 
     next();
   });
 };
 
-// Overenie admin roly
+
 const verifyAdmin = (req, res, next) => {
   if (req.user.rola !== "admin") {
     return res.status(403).json({ message: "Nemáš admin práva" });
@@ -153,7 +152,6 @@ app.post("/api/login", async (req, res) => {
    ADMIN – USERS
 ========================= */
 
-// ZOZNAM POUŽÍVATEĽOV
 app.get("/api/users", verifyToken, verifyAdmin, async (req, res) => {
   try {
     const [users] = await db.query(
@@ -537,6 +535,33 @@ app.post("/api/recenzie", verifyToken, async (req, res) => {
   }
 });
 
+/* =========================
+   RECENZIE – VEREJNÝ ENDPOINT
+========================= */
+
+app.get("/api/public/reviews", async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        r.id, 
+        r.hviezdicky, 
+        r.text_recenzie, 
+        r.datum_vytvorenia, 
+        r.pouzivatel_id, 
+        p.meno AS meno_pouzivatela,
+        s.nazov AS sportovisko_nazov
+      FROM recenzia r
+      JOIN pouzivatel p ON r.pouzivatel_id = p.id
+      JOIN sportovisko s ON r.sportovisko_id = s.id
+      ORDER BY r.datum_vytvorenia DESC
+      LIMIT 10
+    `);
+    res.json(rows);
+  } catch (err) {
+    console.error("Chyba pri načítaní recenzií:", err);
+    res.status(500).json({ message: "Chyba servera pri načítaní recenzií" });
+  }
+});
 
 /* =========================
    SERVER START

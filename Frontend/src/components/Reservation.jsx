@@ -4,9 +4,23 @@ import { useNavigate, useLocation } from "react-router-dom";
 export default function Reservation() {
   const [sportoviska, setSportoviska] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation(); 
-  
+  const location = useLocation();
+
   const [filters, setFilters] = useState({ nazov: "", lokalita: "", typ: "" });
+
+  // URL tvojho obrázka z Unsplash
+  const backgroundImageUrl = "https://images.unsplash.com/photo-1459865264687-595d652de67e?ixid=M3w0MzUxNjF8MHwxfHNlYXJjaHw2fHxzcG9ydHN8ZW58MHx8fHwxNzQ2ODcxMzU2fDA&ixlib=rb-4.1.0&orientation=landscape&fit=crop&crop=entropy%2Cfaces&auto=format%2Ccompress&w=1280";
+
+  // Štýl pre pozadie celej stránky
+  const backgroundStyle = {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${backgroundImageUrl}')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
+    minHeight: "100vh",
+    width: "100%",
+    paddingBottom: "3rem"
+  };
 
   useEffect(() => {
     // 1. Načítanie dát z API
@@ -21,19 +35,14 @@ export default function Reservation() {
     };
     fetchSportoviska();
 
-    // 2. Spracovanie všetkých parametrov z URL (?nazov=...&lokalita=...&type=...)
+    // 2. Spracovanie parametrov z URL
     const queryParams = new URLSearchParams(location.search);
-    const typeFromUrl = queryParams.get("type") || "";
-    const lokalitaFromUrl = queryParams.get("lokalita") || "";
-    const nazovFromUrl = queryParams.get("nazov") || "";
-
-    // Aktualizujeme filtre na základe hodnôt v URL
     setFilters({
-      nazov: nazovFromUrl,
-      lokalita: lokalitaFromUrl,
-      typ: typeFromUrl
+      nazov: queryParams.get("nazov") || "",
+      lokalita: queryParams.get("lokalita") || "",
+      typ: queryParams.get("type") || ""
     });
-  }, [location.search]); // Spustí sa pri každej zmene URL parametrov
+  }, [location.search]);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -49,82 +58,93 @@ export default function Reservation() {
   });
 
   return (
-    <div className="container py-5">
-      <h1 className="text-center mb-5 fw-bold text-primary">Rezervácia športovísk</h1>
+    <div style={backgroundStyle}>
+      <div className="container py-5">
+        {/* Nadpis s bielym textom a tieňom kvôli čitateľnosti na pozadí */}
+        <h1 className="text-center mb-5 fw-bold text-white" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+          Rezervácia športovísk
+        </h1>
 
-      {/* Filtračný panel */}
-      <div className="card shadow-sm p-4 mb-5 bg-light">
-        <div className="row g-3">
-          <div className="col-md-4">
-            <label className="form-label fw-semibold">Názov športoviska</label>
-            <input
-              type="text"
-              name="nazov"
-              className="form-control"
-              placeholder="Hľadať podľa názvu..."
-              value={filters.nazov}
-              onChange={handleFilterChange}
-            />
-          </div>
-          <div className="col-md-4">
-            <label className="form-label fw-semibold">Lokalita</label>
-            <input
-              type="text"
-              name="lokalita"
-              className="form-control"
-              placeholder="Napr. Žilina..."
-              value={filters.lokalita}
-              onChange={handleFilterChange}
-            />
-          </div>
-          <div className="col-md-4">
-            <label className="form-label fw-semibold">Typ športu</label>
-            <select 
-              name="typ" 
-              className="form-select" 
-              value={filters.typ} 
-              onChange={handleFilterChange}
-            >
-              <option value="">Všetky športy</option>
-              <option value="Futbal">Futbal</option>
-              <option value="Tenis">Tenis</option>
-              <option value="Basketbal">Basketbal</option>
-              <option value="Posilňovňa">Posilňovňa</option>
-            </select>
+        {/* Filtračný panel s jemným skleneným efektom (Glassmorphism) */}
+        <div className="card shadow-lg p-4 mb-5 border-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", borderRadius: "15px" }}>
+          <div className="row g-3">
+            <div className="col-md-4">
+              <label className="form-label fw-bold">Názov športoviska</label>
+              <input
+                type="text"
+                name="nazov"
+                className="form-control"
+                placeholder="Hľadať podľa názvu..."
+                value={filters.nazov}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label fw-bold">Lokalita</label>
+              <input
+                type="text"
+                name="lokalita"
+                className="form-control"
+                placeholder="Napr. Žilina..."
+                value={filters.lokalita}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label fw-bold">Typ športu</label>
+              <select 
+                name="typ" 
+                className="form-select" 
+                value={filters.typ} 
+                onChange={handleFilterChange}
+              >
+                <option value="">Všetky športy</option>
+                <option value="Futbal">Futbal</option>
+                <option value="Tenis">Tenis</option>
+                <option value="Basketbal">Basketbal</option>
+                <option value="Posilňovňa">Posilňovňa</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Zobrazenie výsledkov */}
-      <div className="row">
-        {filteredSportoviska.length > 0 ? (
-          filteredSportoviska.map((s) => (
-            <div key={s.id} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100 shadow-sm border-0">
-                <div className="card-body">
-                  <h5 className="card-title fw-bold">{s.nazov}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted">
-                    <i className="bi bi-geo-alt me-1"></i>{s.lokalita}
-                  </h6>
-                  <span className="badge bg-info text-dark mb-3">{s.typ}</span>
-                  <p className="card-text fs-4 fw-bold text-success">
-                    {s.cena_za_hodinu} € <small className="fs-6 text-muted">/ hod</small>
-                  </p>
-                  <button 
-                    className="btn btn-primary w-100 fw-bold" 
-                    onClick={() => navigate(`/MakingReservation/${s.id}`)}
-                  >
-                    Začať rezerváciu
-                  </button>
+        {/* Zobrazenie výsledkov */}
+        <div className="row">
+          {filteredSportoviska.length > 0 ? (
+            filteredSportoviska.map((s) => (
+              <div key={s.id} className="col-md-6 col-lg-4 mb-4">
+                <div className="card h-100 shadow border-0" style={{ borderRadius: "12px", overflow: "hidden" }}>
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title fw-bold text-dark">{s.nazov}</h5>
+                    <h6 className="card-subtitle mb-2 text-secondary">
+                      <i className="bi bi-geo-alt-fill me-1 text-danger"></i>{s.lokalita}
+                    </h6>
+                    <div className="mb-3">
+                      <span className="badge bg-primary px-3 py-2">{s.typ}</span>
+                    </div>
+                    <div className="mt-auto">
+                      <p className="card-text fs-4 fw-bold text-success mb-3">
+                        {s.cena_za_hodinu} € <small className="fs-6 text-muted fw-normal">/ hod</small>
+                      </p>
+                      <button 
+                        className="btn btn-primary w-100 fw-bold py-2 shadow-sm" 
+                        onClick={() => navigate(`/MakingReservation/${s.id}`)}
+                      >
+                        Začať rezerváciu
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="col-12 text-center py-5">
+              <div className="bg-white d-inline-block p-4 rounded-pill shadow">
+                 <p className="text-muted fs-5 mb-0">Nenašli sa žiadne športoviská pre zadané kritériá.</p>
+              </div>
             </div>
-          ))
-        ) : (
-          <div className="col-12 text-center py-5">
-            <p className="text-muted fs-5">Nenašli sa žiadne športoviská pre zadané kritériá.</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
