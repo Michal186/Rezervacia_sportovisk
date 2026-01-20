@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-// Predpokladáme, že tu je import pre presmerovanie, napr.:
 import { useNavigate } from 'react-router-dom'; 
 
-// ⚠️ URL tvojho Express Login endpointu
 const LOGIN_URL = 'http://localhost:3000/api/login'; 
 
 function Login({ onLoginSuccess }) {
@@ -13,19 +11,16 @@ function Login({ onLoginSuccess }) {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [serverError, setServerError] = useState(''); // Na chyby z backendu
+  const [serverError, setServerError] = useState(''); 
   
-  // Hook pre presmerovanie
   const navigate = useNavigate();
 
-  // Handler, ktorý aktualizuje stav pri zmene inputu
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setServerError('');
   };
 
-  // Klientská validácia
   const validate = () => {
     let tempErrors = {};
     if (!formData.email) tempErrors.email = "Email je povinný.";
@@ -35,10 +30,8 @@ function Login({ onLoginSuccess }) {
     return Object.keys(tempErrors).length === 0;
   };
 
-  // Spracovanie odoslania formulára s natívnym fetch
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     setIsSubmitting(true);
@@ -47,46 +40,32 @@ function Login({ onLoginSuccess }) {
     try {
         const response = await fetch(LOGIN_URL, {
             method: 'POST',
-            headers: {
-                // Kľúčové: Uvádzame, že posielame JSON
-                'Content-Type': 'application/json',
-            },
-            // JavaScript objekt musíme previesť na JSON reťazec
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: formData.email, heslo: formData.heslo }),
         });
 
-        const data = await response.json(); // Manuálne parsovanie JSON odpovede
+        const data = await response.json();
 
         if (!response.ok) {
-            // Ak je status 4xx/5xx (napr. 401 Nesprávne heslo), vyhodíme chybu
             throw new Error(data.message || 'Chyba pri prihlásení. Skúste znova.');
         }
 
-        // Úspešné prihlásenie: Získame token
         const token = data.token;
         const role = data.user.rola;
 
         localStorage.setItem('userToken', token);
         localStorage.setItem('isLoggedIn', 'true');
-
-        
         localStorage.setItem("userRole", role);
 
-        
-        // Vykonáme presmerovanie alebo callback
         if (onLoginSuccess) {
             onLoginSuccess(token); 
         } else {
-            // Predvolené presmerovanie, napr. na domovskú stránku      NAVIGATE
             navigate('/');
-            console.log("Prihlásenie úspešné, token uložený.");
         }
 
     } catch (error) {
-        // Spracovanie chýb zo siete alebo chýb vyhodených v bloku 'if (!response.ok)'
         console.error("Chyba pri fetch volaní:", error.message);
-        setServerError(error.message); // Zobrazíme chybu používateľovi
-        
+        setServerError(error.message); 
     } finally {
         setIsSubmitting(false);
     }
@@ -97,7 +76,6 @@ function Login({ onLoginSuccess }) {
       <h2>Prihlásenie</h2>
       <form onSubmit={handleSubmit}>
         
-        {/* Email */}
         <div style={{ marginBottom: '15px' }}>
           <label>Email:</label>
           <input
@@ -110,7 +88,6 @@ function Login({ onLoginSuccess }) {
           {errors.email && <p style={{ color: 'red', fontSize: '12px' }}>{errors.email}</p>}
         </div>
 
-        {/* Heslo */}
         <div style={{ marginBottom: '15px' }}>
           <label>Heslo:</label>
           <input
@@ -123,18 +100,66 @@ function Login({ onLoginSuccess }) {
           {errors.heslo && <p style={{ color: 'red', fontSize: '12px' }}>{errors.heslo}</p>}
         </div>
 
-        {/* Serverová chyba (pre nesprávne meno/heslo) */}
         {serverError && <p style={{ color: 'red', marginBottom: '15px', fontWeight: 'bold' }}>{serverError}</p>}
 
-
-        {/* Tlačidlo Submit */}
+        {/* --- TLAČIDLO PRIHLÁSIŤ (Hlavná akcia) --- */}
         <button 
           type="submit" 
           disabled={isSubmitting}
-          style={{ padding: '10px 15px', backgroundColor: isSubmitting ? '#ccc' : '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+          style={{ 
+            width: '100%',
+            padding: '10px 15px', 
+            backgroundColor: isSubmitting ? '#ccc' : '#007bff', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '5px', 
+            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold'
+          }}
         >
           {isSubmitting ? 'Prihlasujem...' : 'Prihlásiť sa'}
         </button>
+
+        {/* --- SEKCIA PRE REGISTRÁCIU --- */}
+        <div style={{ marginTop: '25px', textAlign: 'center', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+          <p style={{ marginBottom: '10px', fontSize: '14px', color: '#555' }}>
+            Ak nie ste registrovaný, kliknite tu:
+          </p>
+          <button 
+            type="button" 
+            onClick={() => navigate('/register')}
+            style={{ 
+              width: '100%',
+              padding: '8px 15px', 
+              backgroundColor: '#28a745', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '5px', 
+              cursor: 'pointer',
+              marginBottom: '10px'
+            }}
+          >
+            Registrovať sa
+          </button>
+
+          {/* --- NÁVRAT DOMOV --- */}
+          <button 
+            type="button" 
+            onClick={() => navigate('/')}
+            style={{ 
+              width: '100%',
+              padding: '8px 15px', 
+              backgroundColor: '#6c757d', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '5px', 
+              cursor: 'pointer' 
+            }}
+          >
+            Návrat domov
+          </button>
+        </div>
       </form>
     </div>
   );

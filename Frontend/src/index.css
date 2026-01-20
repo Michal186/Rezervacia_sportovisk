@@ -17,6 +17,7 @@
 .banner-subtitle {
     /* Zmení farbu podnadpisu na čiernu */
     color: black !important; 
+
     
     /* Pridá tieň textu */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); 
@@ -108,4 +109,45 @@
     margin-top: 5px; 
     font-family: comic sans ms;
     text-align: justify;
+}
+
+
+/* REZERVACIA */
+
+/* Pridaj si do index.css alebo App.css */
+
+.sportovisko-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.sportovisko-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.5em 0.8em;
+}
+
+
+/* REZERVACIA - GALERIA */
+
+.gallery-hover:hover .gallery-img {
+  transform: scale(1.1);
+}
+
+.gallery-overlay {
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-hover:hover .gallery-overlay {
+  opacity: 1;
 }

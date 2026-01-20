@@ -20,7 +20,7 @@ export default function SportoviskoEdit() {
   });
 
   /* =========================
-     ADMIN OCHRANA
+      ADMIN OCHRANA
   ========================= */
   useEffect(() => {
     if (role !== "admin") {
@@ -29,7 +29,7 @@ export default function SportoviskoEdit() {
   }, [role, navigate]);
 
   /* =========================
-     NAČÍTANIE ŠPORTOVÍSK
+      NAČÍTANIE ŠPORTOVÍSK
   ========================= */
   useEffect(() => {
     fetchSportoviska();
@@ -49,9 +49,6 @@ export default function SportoviskoEdit() {
     }
   };
 
-  /* =========================
-     CREATE / UPDATE
-  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -86,9 +83,6 @@ export default function SportoviskoEdit() {
     setEditingId(null);
   };
 
-  /* =========================
-     EDIT
-  ========================= */
   const handleEdit = (s) => {
     setForm({
       nazov: s.nazov,
@@ -101,9 +95,6 @@ export default function SportoviskoEdit() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  /* =========================
-     DELETE
-  ========================= */
   const handleDelete = async (id) => {
     if (!window.confirm("Naozaj chceš vymazať športovisko?")) return;
 
@@ -120,97 +111,85 @@ export default function SportoviskoEdit() {
     }
   };
 
-  /* =========================
-     RENDER
-  ========================= */
   return (
     <div className="container py-5">
       <h1 className="fw-bold mb-4">Správa športovísk</h1>
 
-
-
       {/* FORM */}
-<form onSubmit={handleSubmit} className="card shadow-sm p-4 mb-5">
-  <div className="row g-3">
-    {/* Názov a Lokalita - stredne široké */}
-    <div className="col-lg-2">
-      <label className="form-label small fw-bold">Názov</label>
-      <input
-        className="form-control"
-        placeholder="Názov"
-        value={form.nazov}
-        onChange={(e) => setForm({ ...form, nazov: e.target.value })}
-        required
-      />
-    </div>
+      <form onSubmit={handleSubmit} className="card shadow-sm p-4 mb-5">
+        <div className="row g-3">
+          <div className="col-lg-2">
+            <label className="form-label small fw-bold">Názov</label>
+            <input
+              className="form-control"
+              placeholder="Názov"
+              value={form.nazov}
+              onChange={(e) => setForm({ ...form, nazov: e.target.value })}
+              required
+            />
+          </div>
 
-    <div className="col-lg-2">
-      <label className="form-label small fw-bold">Lokalita</label>
-      <input
-        className="form-control"
-        placeholder="Lokalita"
-        value={form.lokalita}
-        onChange={(e) => setForm({ ...form, lokalita: e.target.value })}
-        required
-      />
-    </div>
+          <div className="col-lg-2">
+            <label className="form-label small fw-bold">Lokalita</label>
+            <input
+              className="form-control"
+              placeholder="Lokalita"
+              value={form.lokalita}
+              onChange={(e) => setForm({ ...form, lokalita: e.target.value })}
+              required
+            />
+          </div>
 
-    {/* ADRESA - dostala najviac priestoru (4/12) */}
-    <div className="col-lg-4">
-      <label className="form-label small fw-bold">Adresa</label>
-      <input
-        className="form-control"
-        placeholder="Ulica, číslo, PSČ"
-        value={form.adresa}
-        onChange={(e) => setForm({ ...form, adresa: e.target.value })}
-        required
-      />
-    </div>
+          <div className="col-lg-4">
+            <label className="form-label small fw-bold">Adresa</label>
+            <input
+              className="form-control"
+              placeholder="Ulica, číslo, PSČ"
+              value={form.adresa}
+              onChange={(e) => setForm({ ...form, adresa: e.target.value })}
+              required
+            />
+          </div>
 
-    {/* TYP - užší (2/12) */}
-    <div className="col-lg-2">
-      <label className="form-label small fw-bold">Typ</label>
-      <input
-        className="form-control"
-        placeholder="napr. Tenis"
-        value={form.typ}
-        onChange={(e) => setForm({ ...form, typ: e.target.value })}
-      />
-    </div>
+          <div className="col-lg-2">
+            <label className="form-label small fw-bold">Typ</label>
+            <input
+              className="form-control"
+              placeholder="napr. Tenis"
+              value={form.typ}
+              onChange={(e) => setForm({ ...form, typ: e.target.value })}
+            />
+          </div>
 
-    {/* CENA - najužšia (2/12) */}
-    <div className="col-lg-2">
-      <label className="form-label small fw-bold">Cena za hod / tréning</label>
-      <div className="input-group">
-        <input
-          type="number"
-          className="form-control"
-          placeholder="0.00"
-          value={form.cena_za_hodinu}
-          onChange={(e) => setForm({ ...form, cena_za_hodinu: e.target.value })}
-          required
-        />
-        <span className="input-group-text">€</span>
-      </div>
-    </div>
-  </div>
+          <div className="col-lg-2">
+            <label className="form-label small fw-bold">Cena za hod / tréning</label>
+            <div className="input-group">
+              <input
+                type="number"
+                className="form-control"
+                placeholder="0.00"
+                value={form.cena_za_hodinu}
+                onChange={(e) => setForm({ ...form, cena_za_hodinu: e.target.value })}
+                required
+              />
+              <span className="input-group-text">€</span>
+            </div>
+          </div>
+        </div>
 
-  {/* Tlačidlá zostávajú vycentrované */}
-  <div className="row mt-4">
-    <div className="col-12 text-center d-flex justify-content-center gap-2">
-      <button type="submit" className="btn btn-danger px-5 shadow-sm fw-bold">
-        {editingId ? "Uložiť zmeny" : "Pridať športovisko"}
-      </button>
-      {editingId && (
-        <button type="button" className="btn btn-outline-secondary px-4" onClick={resetForm}>
-          Zrušiť
-        </button>
-      )}
-    </div>
-  </div>
-</form>
-
-
+        <div className="row mt-4">
+          <div className="col-12 text-center d-flex justify-content-center gap-2">
+            <button type="submit" className="btn btn-danger px-5 shadow-sm fw-bold">
+              {editingId ? "Uložiť zmeny" : "Pridať športovisko"}
+            </button>
+            {editingId && (
+              <button type="button" className="btn btn-outline-secondary px-4" onClick={resetForm}>
+                Zrušiť
+              </button>
+            )}
+          </div>
+        </div>
+      </form>
 
       {/* TABUĽKA */}
       <div className="table-responsive">
@@ -233,30 +212,34 @@ export default function SportoviskoEdit() {
                 <td>{s.adresa}</td>
                 <td>{s.typ}</td>
                 <td>{s.cena_za_hodinu} €</td>
+
                 <td className="text-end">
-                  
+    
+                  {/* ŽLTÉ TLAČIDLO*/}
                   <button
-                      className="btn btn-sm btn-outline-info me-2"
-                      onClick={() => navigate(`/admin/sportovisko/${s.id}/galeria`)}
-                    >
-                      Galéria
+                    className="btn btn-sm btn-outline-warning me-2 fw-bold"
+                    onClick={() => navigate(`/admin/sportovisko/${s.id}/galeria`)}
+                  >
+                    Galéria
                   </button>
 
+                  {/* MODRÉ TLAČIDLO*/}
                   <button
-                    className="btn btn-sm btn-outline-secondary me-2"
+                    className="btn btn-sm btn-outline-primary me-2"
                     onClick={() => handleEdit(s)}
                   >
                     Upraviť
                   </button>
+
+                  {/* ČERVENÉ TLAČIDLO*/}
                   <button
                     className="btn btn-sm btn-outline-danger"
                     onClick={() => handleDelete(s.id)}
                   >
                     Zmazať
                   </button>
-
-
                 </td>
+
               </tr>
             ))}
           </tbody>

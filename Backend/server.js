@@ -51,35 +51,54 @@ const verifyAdmin = (req, res, next) => {
    AUTH ROUTES
 ========================= */
 
-// REGISTER
+// REGISTER s rozšírenou validáciou
 app.post("/api/register", async (req, res) => {
-  const { meno, email, heslo } = req.body;
+  const { meno, email, heslo, confirmHeslo } = req.body;
 
-  if (!meno || !email || !heslo) {
-    return res.status(400).json({ message: "Vyplň všetky polia" });
+  // 1. Kontrola, či sú vyplnené všetky polia
+  if (!meno || !email || !heslo || !confirmHeslo) {
+    return res.status(400).json({ message: "Všetky polia sú povinné." });
+  }
+
+  // 2. Validácia formátu emailu (RegEx rovnaký ako na frontende)
+  const emailRegex = /\S+@\S+\.\S+/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Emailová adresa je neplatná." });
+  }
+
+  // 3. Validácia dĺžky hesla
+  if (heslo.length < 6) {
+    return res.status(400).json({ message: "Heslo musí mať aspoň 6 znakov." });
+  }
+
+  // 4. Kontrola zhody hesiel
+  if (heslo !== confirmHeslo) {
+    return res.status(400).json({ message: "Heslá sa nezhodujú." });
   }
 
   try {
+    // 5. Kontrola, či používateľ už existuje
     const [existing] = await db.query(
       "SELECT id FROM pouzivatel WHERE email = ?",
       [email]
     );
 
     if (existing.length > 0) {
-      return res.status(400).json({ message: "Používateľ už existuje" });
+      return res.status(400).json({ message: "Používateľ s týmto emailom už existuje." });
     }
 
+    // 6. Hashovanie a uloženie
     const hashedPassword = await bcrypt.hash(heslo, 10);
 
     await db.query(
       "INSERT INTO pouzivatel (meno, email, heslo, rola) VALUES (?, ?, ?, ?)",
-      [meno, email, hashedPassword, "user"]
+      [meno.trim(), email, hashedPassword, "user"]
     );
 
-    res.status(201).json({ message: "Registrácia úspešná" });
+    res.status(201).json({ message: "Registrácia úspešná." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Chyba servera" });
+    res.status(500).json({ message: "Chyba servera pri registrácii." });
   }
 });
 
@@ -127,6 +146,9 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+
+
+
 /* =========================
    ADMIN – USERS
 ========================= */
@@ -156,6 +178,37 @@ app.delete("/api/users/:id", verifyToken, verifyAdmin, async (req, res) => {
     res.status(500).json({ message: "Chyba servera" });
   }
 });
+
+
+// ÚPRAVA POUŽÍVATEĽA (Meno, Email, Rola)
+app.put("/api/users/:id", verifyToken, verifyAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { meno, email, rola } = req.body;
+
+  // Základná validácia
+  if (!meno || !email || !rola) {
+    return res.status(400).json({ message: "Všetky polia sú povinné" });
+  }
+
+  try {
+    // Spustíme UPDATE v databáze
+    const [result] = await db.query(
+      "UPDATE pouzivatel SET meno = ?, email = ?, rola = ? WHERE id = ?",
+      [meno, email, rola, id]
+    );
+
+    // Skontrolujeme, či sa riadok naozaj zmenil
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Používateľ nenájdený" });
+    }
+
+    res.json({ message: "Údaje používateľa boli úspešne upravené" });
+  } catch (err) {
+    console.error("Chyba pri UPDATE pouzivatel:", err);
+    res.status(500).json({ message: "Chyba servera pri úprave používateľa" });
+  }
+});
+
 
 
 /* =========================
@@ -336,6 +389,153 @@ app.put("/api/terminy/:id", verifyToken, verifyAdmin, async (req, res) => {
   }
 });
 
+// =========================
+// ŠPORTOVISKÁ – PUBLIC (bez tokenu)
+// =========================
+app.get("/api/public/sportoviska", async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT id, nazov, lokalita, adresa, typ, cena_za_hodinu
+      FROM sportovisko
+      ORDER BY nazov
+    `);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Chyba servera" });
+  }
+});
+
+// GET - Detail konkrétneho športoviska (pre MakingReservation)
+app.get("/api/public/sportoviska/:id", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM sportovisko WHERE id = ?", [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ message: "Nenašlo sa" });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ message: "Chyba servera" });
+  }
+});
+
+// GET - Galéria konkrétneho športoviska (verejná)
+app.get("/api/public/sportoviska/:id/galeria", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT id, adresa_obrazka FROM galeria WHERE sportovisko_id = ?", [req.params.id]);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Chyba servera" });
+  }
+});
+
+// GET - Iba voľné termíny pre konkrétne športovisko
+app.get("/api/public/sportoviska/:id/terminy", async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Vyberieme termíny, ktorých ID NIE JE v tabuľke rezervácia
+    const [rows] = await db.query(
+      `SELECT * FROM termin 
+       WHERE sportovisko_id = ? 
+       AND id NOT IN (SELECT termin_id FROM rezervacia)
+       ORDER BY datum, cas_od`,
+      [id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Chyba pri načítaní termínov" });
+  }
+});
+
+/* =========================
+   REZERVÁCIE (UŽÍVATEĽSKÉ)
+========================= */
+app.post("/api/rezervacie", verifyToken, async (req, res) => {
+  const { termin_id } = req.body;
+  const pouzivatel_id = req.user.id;
+
+  if (!termin_id) {
+    return res.status(400).json({ message: "Chýba identifikátor termínu." });
+  }
+
+  try {
+    // 1. Kontrola obsadenosti
+    // Hľadáme, či už k tomuto termínu existuje záznam v tabuľke rezervacia
+    const [existujucaRezervacia] = await db.query(
+      "SELECT id FROM rezervacia WHERE termin_id = ?",
+      [termin_id]
+    );
+
+    if (existujucaRezervacia.length > 0) {
+      return res.status(400).json({ message: "Tento termín je už bohužiaľ obsadený." });
+    }
+
+    // 2. Vytvorenie rezervácie
+    // Stĺpec 'cas_vytvorenia' tu neuvádzame, databáza ho vyplní automaticky (CURRENT_TIMESTAMP)
+    await db.query(
+      "INSERT INTO rezervacia (pouzivatel_id, termin_id) VALUES (?, ?)",
+      [pouzivatel_id, termin_id]
+    );
+
+    res.status(201).json({ 
+      success: true, 
+      message: "Rezervácia bola úspešne vytvorená!" 
+    });
+
+  } catch (err) {
+    console.error("Chyba pri vytváraní rezervácie:", err);
+    res.status(500).json({ message: "Chyba servera pri ukladaní rezervácie." });
+  }
+});
+
+/* =========================
+   ZÍSKANIE REZERVÁCIÍ POUŽÍVATEĽA
+========================= */
+app.get("/api/moje-rezervacie", verifyToken, async (req, res) => {
+  const pouzivatel_id = req.user.id;
+  try {
+    const [rows] = await db.query(
+      `SELECT 
+        r.id AS rezervacia_id,
+        s.id AS sportovisko_id, -- TOTO JE DÔLEŽITÉ PRE RECENZIU
+        s.nazov AS sportovisko_nazov,
+        t.datum,
+        t.cas_od,
+        t.cas_do
+      FROM rezervacia r
+      JOIN termin t ON r.termin_id = t.id
+      JOIN sportovisko s ON t.sportovisko_id = s.id
+      WHERE r.pouzivatel_id = ?`,
+      [pouzivatel_id]
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Chyba servera" });
+  }
+});
+
+
+/* =========================
+   RECENZIE
+========================= */
+app.post("/api/recenzie", verifyToken, async (req, res) => {
+  const { sportovisko_id, hviezdicky, text_recenzie } = req.body;
+  const pouzivatel_id = req.user.id;
+
+  if (!sportovisko_id || !hviezdicky) {
+    return res.status(400).json({ message: "Chýba hodnotenie alebo ID športoviska" });
+  }
+
+  try {
+    await db.query(
+      "INSERT INTO recenzia (pouzivatel_id, sportovisko_id, hviezdicky, text_recenzie) VALUES (?, ?, ?, ?)",
+      [pouzivatel_id, sportovisko_id, hviezdicky, text_recenzie]
+    );
+    res.status(201).json({ message: "Recenzia bola uložená" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Chyba pri ukladaní recenzie" });
+  }
+});
 
 
 /* =========================

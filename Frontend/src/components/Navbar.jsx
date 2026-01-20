@@ -12,7 +12,7 @@ export default function Navbar() {
 
     setIsLoggedIn(!!token);
     setIsAdmin(role === "admin");
-      console.log("Rola: ", role);
+    console.log("Rola: ", role);
   }, []);
 
   const handleLogout = () => {
@@ -27,7 +27,7 @@ export default function Navbar() {
       <div className="container">
 
         {/* Logo */}
-        <Link className="navbar-brand fw-bold fs-4" to="/">
+        <Link className="navbar-brand fw-bold fs-4 text-dark" to="/">
           Športoviská
         </Link>
 
@@ -43,28 +43,46 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="nav">
 
-          {/* Menu */}
-          <ul className="navbar-nav mx-auto text-center text-lg-start">
-            <li className="nav-item">
-              <Link className="nav-link" to="/how-it-works">Ako to funguje</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/about">O nás</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contact">Kontakt</Link>
+          {/* Menu s oddeľovačmi */}
+          <ul className="navbar-nav mx-auto text-center text-lg-start align-items-center">
+            
+            <li className="nav-item d-flex align-items-center">
+              <Link className="nav-link fw-bold text-dark px-3 d-flex align-items-center" to="/">
+                <i className="bi bi-house-door me-1"></i> Domov
+              </Link>
+              <span className="text-muted d-none d-lg-block">|</span>
+            </li> 
+
+            <li className="nav-item d-flex align-items-center">
+              <Link className="nav-link fw-bold text-dark px-3" to="/reservation">
+                Rezervovať
+              </Link>
+              <span className="text-muted d-none d-lg-block">|</span>
             </li>
 
-            {/* ADMIN LINK */}
+            <li className="nav-item d-flex align-items-center">
+              <Link className="nav-link fw-bold text-dark px-3" to="/MyReservations">
+                Moje rezervácie
+              </Link>
+              <span className="text-muted d-none d-lg-block">|</span>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link fw-bold text-dark px-3" to="/contact">
+                Kontakty
+              </Link>
+            </li>
+
+            {/* ADMIN LINK - Oddelený čiarou len ak existuje */}
             {isAdmin && (
-              <li className="nav-item">
-                <Link
-                  className="nav-link fw-bold text-danger"
-                  to="/adminedit"
-                >
-                  Upraviť
-                </Link>
-              </li>
+              <>
+                <span className="text-muted d-none d-lg-block ms-2">|</span>
+                <li className="nav-item">
+                  <Link className="nav-link fw-bold text-danger px-3" to="/adminedit">
+                    Upraviť
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
 
@@ -72,10 +90,10 @@ export default function Navbar() {
           <div className="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0">
             {!isLoggedIn ? (
               <>
-                <Link className="btn btn-outline-danger" to="/login">
+                <Link className="btn btn-outline-danger fw-bold" to="/login">
                   Prihlásiť sa
                 </Link>
-                <Link className="btn btn-warning" to="/register">
+                <Link className="btn btn-warning fw-bold" to="/register">
                   Registrácia
                 </Link>
               </>
