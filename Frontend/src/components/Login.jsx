@@ -102,7 +102,7 @@ function Login({ onLoginSuccess }) {
 
         {serverError && <p style={{ color: 'red', marginBottom: '15px', fontWeight: 'bold' }}>{serverError}</p>}
 
-        {/* --- TLAČIDLO PRIHLÁSIŤ (Hlavná akcia) --- */}
+        {/* --- TLAČIDLO PRIHLÁSIŤ --- */}
         <button 
           type="submit" 
           disabled={isSubmitting}

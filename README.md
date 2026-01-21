@@ -1,7 +1,9 @@
 Návod na inštaláciu 
-Pred spustením projektu je potrebné mať nainštalované:
 
-Node.js a npm
+Tento projekt pozostáva z dvoch častí: Frontend (React/Vite) a Backend (Node.js)
+
+Pred spustením projektu je potrebné mať nainštalované:
+Node.js, npm a MySQL
 
 Postup inštalácie
 

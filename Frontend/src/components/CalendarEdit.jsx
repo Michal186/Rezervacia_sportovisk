@@ -21,13 +21,12 @@ export default function CalendarEdit() {
     cas_do: "",
   });
 
-  // Pomocná funkcia na formátovanie času (odstránenie sekúnd HH:mm:ss -> HH:mm)
+  // Pomocná funkcia na formátovanie času (HH:mm:ss -> HH:mm)
   const formatTime = (time) => {
     if (!time) return "";
     return time.split(":").slice(0, 2).join(":");
   };
 
-  // Štýl futuristického pozadia
   const backgroundStyle = {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://bigthink.com/wp-content/uploads/2022/12/AdobeStock_173668487.jpeg?w=3200')`,
     backgroundSize: "cover",
@@ -155,7 +154,7 @@ export default function CalendarEdit() {
           </select>
         </div>
 
-        {/* FORMULÁR - ZOSTÁVA BIELY PRI EDITÁCII */}
+        {/* FORMULÁR */}
         {selectedSportovisko && (
           <form 
             onSubmit={handleSubmit} 

@@ -31,18 +31,13 @@ export default function SportoviskoEdit() {
     paddingBottom: "50px"
   };
 
-  /* =========================
-      ADMIN OCHRANA
-  ========================= */
   useEffect(() => {
     if (role !== "admin") {
       navigate("/");
     }
   }, [role, navigate]);
 
-  /* =========================
-      NAČÍTANIE ŠPORTOVÍSK
-  ========================= */
+ 
   useEffect(() => {
     fetchSportoviska();
   }, []);

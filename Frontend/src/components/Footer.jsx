@@ -4,7 +4,6 @@ const Footer = () => {
       <div className="container text-center text-md-start">
         <div className="row text-center text-md-start">
           
-          {/* O nás / Názov */}
           <div className="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
             <h5 className="text-uppercase mb-4 fw-bold text-warning">Športoviská UNIZA</h5>
             <p className="small text-secondary">
@@ -12,7 +11,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Kontakt */}
           <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
             <h5 className="text-uppercase mb-4 fw-bold text-warning">Kontakt</h5>
             <p className="small"><i className="bi bi-geo-alt me-2"></i>Univerzitná 8215/1, 010 26 Žilina</p>
@@ -20,7 +18,6 @@ const Footer = () => {
             <p className="small"><i className="bi bi-telephone me-2"></i>+421 41 513 5111</p>
           </div>
 
-          {/* Rýchle odkazy */}
           <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
             <h5 className="text-uppercase mb-4 fw-bold text-warning">Odkazy</h5>
             <p><a href="/" className="text-white text-decoration-none small">Domov</a></p>

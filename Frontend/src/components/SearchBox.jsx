@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 export default function SearchBox() {
   const navigate = useNavigate();
   
-  // Rozšírený stav pre všetky vyhľadávacie kritériá
   const [searchParams, setSearchParams] = useState({
     nazov: "",
     lokalita: "",
@@ -19,13 +18,11 @@ export default function SearchBox() {
   };
 
   const handleSearch = () => {
-    // Vytvorenie reťazca parametrov
     const params = new URLSearchParams();
     if (searchParams.nazov) params.append("nazov", searchParams.nazov);
     if (searchParams.lokalita) params.append("lokalita", searchParams.lokalita);
     if (searchParams.sport) params.append("type", searchParams.sport);
 
-    // Navigácia na /reservation s nazbieranými parametrami
     navigate(`/reservation?${params.toString()}`);
   };
 
@@ -34,7 +31,6 @@ export default function SearchBox() {
       <div className="bg-white shadow p-4 rounded-3 mt-n4 position-relative">
         <div className="row g-3 align-items-end">
 
-          {/* Názov športoviska - Textové pole */}
           <div className="col-12 col-md-4 col-lg-4">
             <label className="form-label fw-bold">Názov športoviska</label>
             <input 
@@ -47,7 +43,6 @@ export default function SearchBox() {
             />
           </div>
 
-          {/* Lokalita - Výber alebo text */}
           <div className="col-12 col-md-4 col-lg-3">
             <label className="form-label fw-bold">Lokalita</label>
             <select 
@@ -63,7 +58,6 @@ export default function SearchBox() {
             </select>
           </div>
 
-          {/* Typ športu - Výber */}
           <div className="col-12 col-md-4 col-lg-3">
             <label className="form-label fw-bold">Typ športu</label>
             <select 
@@ -80,7 +74,6 @@ export default function SearchBox() {
             </select>
           </div>
 
-          {/* Tlačidlo Hľadať */}
           <div className="col-12 col-lg-2">
             <button className="btn btn-danger w-100 fw-bold" onClick={handleSearch}>
               <i className="bi bi-search me-2"></i>Hľadať

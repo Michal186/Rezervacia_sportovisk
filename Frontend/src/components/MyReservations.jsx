@@ -5,23 +5,12 @@ export default function MyReservations() {
   const [rezervacie, setRezervacie] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Stavy pre recenziu
   const [showModal, setShowModal] = useState(false);
   const [selectedSportoviskoId, setSelectedSportoviskoId] = useState(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
 
   const navigate = useNavigate();
-
-  // Definícia štýlu pozadia
-  const backgroundStyle = {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://cmesk-ott-images-svod.ssl.cdn.cra.cz/r1920x1080n/5ea5ea9a-db7e-4ae4-86cc-f98ce6138954')`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundAttachment: "fixed",
-    minHeight: "100vh",
-    width: "100%",
-  };
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -67,16 +56,16 @@ export default function MyReservations() {
 
   if (loading) {
     return (
-      <div style={backgroundStyle} className="d-flex justify-content-center align-items-center">
+      <div className="reservations-page-wrapper d-flex justify-content-center align-items-center">
         <div className="spinner-border text-light"></div>
       </div>
     );
   }
 
   return (
-    <div style={backgroundStyle}>
+    <div className="reservations-page-wrapper">
       <div className="container py-5">
-        <h2 className="fw-bold mb-4 text-white" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+        <h2 className="fw-bold mb-4 text-white reservations-title">
           Moje Rezervácie
         </h2>
         
@@ -84,7 +73,7 @@ export default function MyReservations() {
           {rezervacie.length > 0 ? (
             rezervacie.map((r) => (
               <div key={r.rezervacia_id} className="col-md-6 mb-4">
-                <div className="card shadow border-0 border-start border-4 border-success h-100" style={{ backgroundColor: "rgba(255, 255, 255, 0.95)" }}>
+                <div className="card shadow border-0 border-start border-4 border-success h-100 reservation-card">
                   <div className="card-body">
                     <h5 className="fw-bold text-success">{r.sportovisko_nazov}</h5>
                     <p className="mb-1 text-dark"><strong>Dátum:</strong> {new Date(r.datum).toLocaleDateString("sk-SK")}</p>
@@ -115,7 +104,7 @@ export default function MyReservations() {
 
         {/* MODÁLNE OKNO */}
         {showModal && (
-          <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
+          <div className="modal d-block modal-overlay">
             <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content border-0 shadow-lg">
                 <div className="modal-header bg-primary text-white">

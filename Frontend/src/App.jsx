@@ -16,7 +16,7 @@ import Contacts from './components/Contacts';
 function App() {
   return (
     <Routes>
-      {/* 1. SKUPINA: Stránky BEZ Navbaru (napr. prihlasovanie) */}
+      {/* 1. SKUPINA: Stránky BEZ Navbaru */}
       <Route path="/Register" element={<Register />} />
       <Route path="/Login" element={<Login />} />
       <Route path="/AdminEdit" element={<AdminEdit />} />

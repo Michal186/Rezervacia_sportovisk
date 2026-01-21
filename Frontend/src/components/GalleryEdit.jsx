@@ -14,7 +14,6 @@ export default function GalleryEdit() {
   const [images, setImages] = useState([]);
   const [url, setUrl] = useState("");
 
-  // Štýl pre pozadie
   const backgroundStyle = {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('https://cdn.discordapp.com/attachments/768364763406794762/1463317157398974556/1ef86e48-5134-63f4-9df8-c92ce60e2725.png?ex=697163cd&is=6970124d&hm=1a9b64bfc9aa538c0f0ee26f89acc2f0a14afd56ea3f0c1d0ba5b72cda022ead&')`,
     backgroundSize: "cover",

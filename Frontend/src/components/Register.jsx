@@ -93,7 +93,7 @@ function Register() {
 
         {errors.server && <p style={{ color: 'red', fontWeight: 'bold' }}>{errors.server}</p>}
 
-        {/* --- TLAČIDLO REGISTROVAŤ (Hlavná akcia) --- */}
+        {/* --- TLAČIDLO REGISTROVAŤ --- */}
         <button 
           type="submit" 
           disabled={isSubmitting}
@@ -112,7 +112,7 @@ function Register() {
           {isSubmitting ? 'Odosielam...' : 'Registrovať'}
         </button>
 
-        {/* --- SEKCIA PRE PRIHLÁSENIE (Nižšie) --- */}
+        {/* --- SEKCIA PRE PRIHLÁSENIE --- */}
         <div style={{ marginTop: '25px', textAlign: 'center', borderTop: '1px solid #eee', paddingTop: '15px' }}>
           <p style={{ marginBottom: '10px', fontSize: '14px', color: '#555' }}>
             Už ste registrovaný? Kliknite tu:

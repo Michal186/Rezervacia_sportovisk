@@ -12,7 +12,6 @@ export default function MakingReservation() {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(null);
 
-  // URL obrázka pozadia
   const backgroundImageUrl = "https://b499309e6c.clvaw-cdnwnd.com/d49711b5fa952c5f4e14cafb94c21a41/200000174-136b514672/tennis-ball-443272_960_720-0.jpg?ph=b499309e6c";
 
   const backgroundStyle = {
@@ -106,7 +105,7 @@ export default function MakingReservation() {
       <div className="container py-5">
         <div className="row">
 
-          {/* ĽAVÁ STRANA */}
+          {/* ĽAVÁ STRANA - INFO */}
           <div className="col-lg-7 mb-4">
             <div className="card shadow-lg border-0 bg-white bg-opacity-95" style={{ borderRadius: "15px" }}>
               <div className="card-body p-4">
@@ -122,18 +121,19 @@ export default function MakingReservation() {
                     galeria.map((foto, index) => (
                       <div key={index} className="col-4 col-md-3">
                         <div
-                          className="position-relative overflow-hidden rounded shadow-sm"
+                          className="gallery-hover position-relative overflow-hidden rounded shadow-sm"
                           style={{ cursor: "pointer", height: "100px" }}
                           onClick={() => setActiveImage(foto.adresa_obrazka)}
                         >
                           <img
                             src={foto.adresa_obrazka}
                             alt={`Foto ${index}`}
-                            className="w-100 h-100"
+                            className="gallery-img w-100 h-100"
                             style={{ objectFit: "cover", transition: "transform 0.3s ease" }}
-                            onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                            onMouseOut={(e) => e.currentTarget.style.transform = "scale(1.0)"}
                           />
+                          <div className="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                             <i className="bi bi-zoom-in text-white fs-4"></i>
+                          </div>
                         </div>
                       </div>
                     ))
@@ -150,7 +150,7 @@ export default function MakingReservation() {
             </div>
           </div>
 
-          {/* PRAVÁ STRANA */}
+          {/* PRAVÁ STRANA - TERMÍNY */}
           <div className="col-lg-5">
             <div className="card shadow-lg border-0 sticky-top bg-white bg-opacity-95" style={{ top: "20px", borderRadius: "15px", overflow: "hidden" }}>
               <div className="card-header bg-dark text-white py-3">

@@ -47,36 +47,30 @@ const verifyAdmin = (req, res, next) => {
 };
 
 /* =========================
-   AUTH ROUTES
+  REGISTRÁCIA
 ========================= */
-
-// REGISTER s rozšírenou validáciou
 app.post("/api/register", async (req, res) => {
   const { meno, email, heslo, confirmHeslo } = req.body;
 
-  // 1. Kontrola, či sú vyplnené všetky polia
+  // Kontrola, či sú vyplnené všetky polia
   if (!meno || !email || !heslo || !confirmHeslo) {
     return res.status(400).json({ message: "Všetky polia sú povinné." });
   }
 
-  // 2. Validácia formátu emailu (RegEx rovnaký ako na frontende)
   const emailRegex = /\S+@\S+\.\S+/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: "Emailová adresa je neplatná." });
   }
 
-  // 3. Validácia dĺžky hesla
   if (heslo.length < 6) {
     return res.status(400).json({ message: "Heslo musí mať aspoň 6 znakov." });
   }
 
-  // 4. Kontrola zhody hesiel
   if (heslo !== confirmHeslo) {
     return res.status(400).json({ message: "Heslá sa nezhodujú." });
   }
 
   try {
-    // 5. Kontrola, či používateľ už existuje
     const [existing] = await db.query(
       "SELECT id FROM pouzivatel WHERE email = ?",
       [email]
@@ -86,7 +80,6 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ message: "Používateľ s týmto emailom už existuje." });
     }
 
-    // 6. Hashovanie a uloženie
     const hashedPassword = await bcrypt.hash(heslo, 10);
 
     await db.query(
@@ -101,7 +94,9 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// LOGIN
+/* =========================
+  LOGIN
+========================= */
 app.post("/api/login", async (req, res) => {
   const { email, heslo } = req.body;
 
@@ -151,7 +146,6 @@ app.post("/api/login", async (req, res) => {
 /* =========================
    ADMIN – USERS
 ========================= */
-
 app.get("/api/users", verifyToken, verifyAdmin, async (req, res) => {
   try {
     const [users] = await db.query(
@@ -272,7 +266,7 @@ app.delete("/api/sportoviska/:id", verifyToken, verifyAdmin, async (req, res) =>
 
 
 // =========================
-// GALÉRIA – GET PODĽA ŠPORTOVISKA
+// GALÉRIA
 // =========================
 app.get("/api/galeria/:sportoviskoId", verifyToken, verifyAdmin, async (req, res) => {
   const { sportoviskoId } = req.params;
@@ -289,9 +283,8 @@ app.get("/api/galeria/:sportoviskoId", verifyToken, verifyAdmin, async (req, res
   }
 });
 
-// =========================
-// GALÉRIA – POST (PRIDAŤ OBRÁZOK)
-// =========================
+
+// post - Pridanie obrázku do galérie
 app.post("/api/galeria", verifyToken, verifyAdmin, async (req, res) => {
   const { sportovisko_id, adresa_obrazka } = req.body;
 
@@ -311,9 +304,7 @@ app.post("/api/galeria", verifyToken, verifyAdmin, async (req, res) => {
   }
 });
 
-// =========================
-// GALÉRIA – DELETE
-// =========================
+// DELETE - Odstránenie obrázku z galérie
 app.delete("/api/galeria/:id", verifyToken, verifyAdmin, async (req, res) => {
   const { id } = req.params;
 
@@ -362,15 +353,13 @@ app.post("/api/terminy", verifyToken, verifyAdmin, async (req, res) => {
 app.delete("/api/terminy/:id", verifyToken, verifyAdmin, async (req, res) => {
   try {
     await db.query("DELETE FROM termin WHERE id = ?", [req.params.id]);
-    res.status(200).json({ message: "Odstránené" }); // Zmenené z 204 na 200 pre istotu
+    res.status(200).json({ message: "Odstránené" }); 
   } catch (error) {
     res.status(500).json({ error: "Interná chyba servera" });
   }
 });
 
-// =========================
-// PUT - Úprava termínu
-// =========================
+// put - Úprava termínu
 app.put("/api/terminy/:id", verifyToken, verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const { datum, cas_od, cas_do } = req.body;
@@ -388,7 +377,7 @@ app.put("/api/terminy/:id", verifyToken, verifyAdmin, async (req, res) => {
 });
 
 // =========================
-// ŠPORTOVISKÁ – PUBLIC (bez tokenu)
+// ŠPORTOVISKÁ – PUBLIC
 // =========================
 app.get("/api/public/sportoviska", async (req, res) => {
   try {
@@ -404,7 +393,7 @@ app.get("/api/public/sportoviska", async (req, res) => {
   }
 });
 
-// GET - Detail konkrétneho športoviska (pre MakingReservation)
+// get - Detail konkrétneho športoviska (verejná)
 app.get("/api/public/sportoviska/:id", async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM sportovisko WHERE id = ?", [req.params.id]);
@@ -415,7 +404,7 @@ app.get("/api/public/sportoviska/:id", async (req, res) => {
   }
 });
 
-// GET - Galéria konkrétneho športoviska (verejná)
+// get - Galéria konkrétneho športoviska (verejná)
 app.get("/api/public/sportoviska/:id/galeria", async (req, res) => {
   try {
     const [rows] = await db.query("SELECT id, adresa_obrazka FROM galeria WHERE sportovisko_id = ?", [req.params.id]);
@@ -425,11 +414,10 @@ app.get("/api/public/sportoviska/:id/galeria", async (req, res) => {
   }
 });
 
-// GET - Iba voľné termíny pre konkrétne športovisko
+// get - Iba voľné termíny pre konkrétne športovisko
 app.get("/api/public/sportoviska/:id/terminy", async (req, res) => {
   const { id } = req.params;
   try {
-    // Vyberieme termíny, ktorých ID NIE JE v tabuľke rezervácia
     const [rows] = await db.query(
       `SELECT * FROM termin 
        WHERE sportovisko_id = ? 
@@ -456,8 +444,6 @@ app.post("/api/rezervacie", verifyToken, async (req, res) => {
   }
 
   try {
-    // 1. Kontrola obsadenosti
-    // Hľadáme, či už k tomuto termínu existuje záznam v tabuľke rezervacia
     const [existujucaRezervacia] = await db.query(
       "SELECT id FROM rezervacia WHERE termin_id = ?",
       [termin_id]
@@ -467,8 +453,6 @@ app.post("/api/rezervacie", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "Tento termín je už bohužiaľ obsadený." });
     }
 
-    // 2. Vytvorenie rezervácie
-    // Stĺpec 'cas_vytvorenia' tu neuvádzame, databáza ho vyplní automaticky (CURRENT_TIMESTAMP)
     await db.query(
       "INSERT INTO rezervacia (pouzivatel_id, termin_id) VALUES (?, ?)",
       [pouzivatel_id, termin_id]
@@ -513,7 +497,7 @@ app.get("/api/moje-rezervacie", verifyToken, async (req, res) => {
 
 
 /* =========================
-   RECENZIE
+   RECENZIE - PRIDANIE
 ========================= */
 app.post("/api/recenzie", verifyToken, async (req, res) => {
   const { sportovisko_id, hviezdicky, text_recenzie } = req.body;
@@ -538,7 +522,6 @@ app.post("/api/recenzie", verifyToken, async (req, res) => {
 /* =========================
    RECENZIE – VEREJNÝ ENDPOINT
 ========================= */
-
 app.get("/api/public/reviews", async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -566,9 +549,8 @@ app.get("/api/public/reviews", async (req, res) => {
 /* =========================
    SERVER START
 ========================= */
-
 testDBConnection().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Server beží na porte ${PORT}`);
+    console.log(`Server beží na porte ${PORT}`);
   });
 });

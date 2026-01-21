@@ -13,10 +13,9 @@ export default function CustomerEdit() {
   const [editingId, setEditingId] = useState(null);
   const [editFormData, setEditFormData] = useState({ meno: "", email: "", rola: "" });
 
-  // Konfigurácia pozadia
   const backgroundStyle = {
     backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://wiki.tf2classic.com/w/images/e/ec/Engineer_RED.png')`,
-    backgroundSize: "contain", // "contain" alebo "cover" podľa preferencie
+    backgroundSize: "contain",
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundAttachment: "fixed",
@@ -122,7 +121,7 @@ export default function CustomerEdit() {
             <i className="bi bi-people-fill me-2"></i>Správa používateľov
           </h1>
 
-          {/* Upozornenie hore */}
+          {/* Upozornenie */}
           {message.text && (
             <div className={`alert alert-${message.type} shadow-sm mb-4`} role="alert">
               {message.text}

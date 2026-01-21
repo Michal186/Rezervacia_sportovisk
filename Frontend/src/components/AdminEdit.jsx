@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 export default function AdminEdit() {
   const navigate = useNavigate();
 
-  // URL obrázka pozadia (Engineering theme)
   const backgroundImageUrl = "https://www.bmu.edu.in/wp-content/uploads/2025/02/Types-of-Engineering.webp";
 
   const backgroundStyle = {
@@ -15,7 +14,7 @@ export default function AdminEdit() {
     minHeight: "100vh",
     width: "100%",
     display: "flex",
-    alignItems: "center" // Vycentrovanie obsahu vertikálne
+    alignItems: "center"
   };
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export default function AdminEdit() {
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-lg-10">
-            {/* Hlavná karta s vysokou priehľadnosťou pre moderný vzhľad */}
+            {/* Hlavný nadpis */}
             <div className="card shadow-lg border-0 rounded-4 bg-white bg-opacity-95">
               <div className="card-body p-4 p-md-5">
                 <h1 className="fw-bold mb-4 text-dark border-bottom pb-3">
@@ -89,7 +88,7 @@ export default function AdminEdit() {
                   </div>
                 </div>
 
-                {/* Spodná akcia */}
+                {/* Domov */}
                 <div className="text-center mt-5">
                   <button
                     className="btn btn-outline-secondary px-4 fw-bold"

@@ -12,7 +12,6 @@ export default function Reviews() {
         if (!response.ok) throw new Error("Chyba pri načítaní recenzií");
         const data = await response.json();
 
-        // OPRAVA: Používame názov stĺpca 'hviezdicky' (s mäkkým i) podľa tvojho backendu
         const topReviews = data.filter(r => Number(r.hviezdicky) === 5);
         setReviews(topReviews);
       } catch (error) {
@@ -79,7 +78,6 @@ export default function Reviews() {
                       {review.sportovisko_nazov}
                     </div>
                     <div className="text-warning small">
-                      {/* OPRAVA: Dynamické hviezdy podľa stĺpca hviezdicky */}
                       {"⭐".repeat(Number(review.hviezdicky))}
                     </div>
                   </div>

@@ -1,10 +1,9 @@
 /* HERO */
-/* Tmavý border okolo banera */
 .hero-banner {
     border: 5px solid black; 
     height: 380px; 
 }
-/* Pozadie aby text bol čiteteľnejší */
+
 .banner-title {
     color: black !important; 
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
@@ -15,20 +14,12 @@
 }
 
 .banner-subtitle {
-    /* Zmení farbu podnadpisu na čiernu */
     color: black !important; 
-
-    
-    /* Pridá tieň textu */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); 
-    
-    /* Pozadie - pre lepšiu čitateľnosť na obrázku */
     background-color: rgba(255, 255, 255, 0.6);
     padding: 5px 10px;
     border-radius: 5px;
     display: inline-block;
-    
-    /* Mierne oddelenie od h1 */
     margin-top: 10px; 
 }
 
@@ -36,17 +27,15 @@
 .sport-card {
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     cursor: pointer;
-    overflow: hidden; /* Zabezpečí, že zaoblenie funguje aj na obrázku */
-    border-radius: 10px !important; /* Zaoblenie rohov */
+    overflow: hidden; 
+    border-radius: 10px !important; 
 }
 
-/* Efekt pri prejdení myšou */
 .sport-card:hover {
-    transform: translateY(-5px); /* Karta sa mierne posunie hore */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Výraznejší tieň */
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
 }
 
-/* Kontajner na obrázok pre fallback */
 .card-img-container {
     height: 155px;
     display: flex;
@@ -68,7 +57,6 @@
 
 }
 
-/* Mierne vylepšenie textu v tele karty */
 .sport-card .card-body {
     padding: 1rem;
 }
@@ -80,7 +68,6 @@
     color: #333; 
 }
 
-/* Zabezpečí, že obrázok má zaoblené horné rohy, ak je to potrebné */
 .sport-img {
     width: 100%;
     object-fit: cover;
@@ -95,7 +82,6 @@
     font-size: 1.25rem; 
 }
 
-/* Icony */
 .feature-icon {
     margin-right: 8px; 
     font-size: 1.5rem; 
@@ -113,10 +99,6 @@
 
 
 /* REZERVACIA */
-
-
-
-
 .sportovisko-card {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -138,7 +120,6 @@
 
 
 /* REZERVACIA - GALERIA */
-
 .gallery-hover:hover .gallery-img {
   transform: scale(1.1);
 }
@@ -153,8 +134,9 @@
   opacity: 1;
 }
 
-/* RECENZIE - HOMEPAGE */
 
+
+/* RECENZIE - HOMEPAGE */
 .fade-in {
   animation: fadeIn 0.8s ease-in-out;
 }
@@ -165,3 +147,24 @@
 
 
 
+/* MOJE REZERVACIE */
+.reservations-page-wrapper {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://cmesk-ott-images-svod.ssl.cdn.cra.cz/r1920x1080n/5ea5ea9a-db7e-4ae4-86cc-f98ce6138954');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.reservations-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.reservation-card {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}

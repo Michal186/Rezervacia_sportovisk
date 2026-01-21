@@ -26,12 +26,10 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div className="container">
 
-        {/* Logo */}
         <Link className="navbar-brand fw-bold fs-4 text-dark" to="/">
           Športoviská
         </Link>
 
-        {/* Toggle */}
         <button
           className="navbar-toggler"
           type="button"
@@ -43,7 +41,7 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="nav">
 
-          {/* Menu s oddeľovačmi */}
+          {/* Menu */}
           <ul className="navbar-nav mx-auto text-center text-lg-start align-items-center">
             
             <li className="nav-item d-flex align-items-center">
@@ -73,7 +71,7 @@ export default function Navbar() {
               </Link>
             </li>
 
-            {/* ADMIN LINK - Oddelený čiarou len ak existuje */}
+            {/* Admin */}
             {isAdmin && (
               <>
                 <span className="text-muted d-none d-lg-block ms-2">|</span>
@@ -86,7 +84,7 @@ export default function Navbar() {
             )}
           </ul>
 
-          {/* Auth */}
+          {/* Prihlásenie / Odhlásenie */}
           <div className="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0">
             {!isLoggedIn ? (
               <>

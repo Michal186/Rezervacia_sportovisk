@@ -15,21 +15,24 @@ export default function Favorites() {
             <h2 className="fw-bold mb-4">Obľúbené športoviská</h2>
             <div className="row g-4">
                 {items.map((item, i) => (
-                    <div className="col-md-3" key={i} style={{ cursor: 'pointer' }} onClick={() => navigate(`/reservation?type=${item.type}`)}>
-                        <div className="card shadow-sm border-0 sport-card h-100">
+                    <div className="col-md-3" key={i}>
+                        <div 
+                            className="card shadow-sm border-0 sport-card h-100" 
+                            onClick={() => navigate(`/reservation?type=${item.type}`)}
+                        >
                             <div className={`card-img-container ${item.color}`}> 
                                 <img 
                                     src={item.img} 
                                     className="card-img-top sport-img" 
                                     alt={item.title}
-                                    height="150" 
+                                    style={{ height: "155px" }} 
                                     onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.style.display = 'none';
+                                        e.target.style.display = 'none'; 
                                     }}
                                 />
                                 <div className="img-fallback">{item.title}</div>
                             </div>
+                            
                             <div className="card-body">
                                 <h5 className="card-title text-center fw-bold">{item.title}</h5>
                             </div>
