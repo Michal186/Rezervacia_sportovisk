@@ -5,7 +5,7 @@ Tento projekt pozostáva z dvoch častí: Frontend (React/Vite) a Backend (Node.
 Pred spustením projektu je potrebné mať nainštalované:
 Node.js, npm a MySQL
 
-Postup inštalácie
+Postup inštalácie:
 
 1. Najprv treba naklonovať repozitár
 git clone https://github.com/Michal186/Rezervacia_sportovisk.git
@@ -24,7 +24,6 @@ DB_USER=root
 DB_PASSWORD=cajik
 DB_NAME=rezervaciadatabase
 DB_PORT=3306
-
 JWT_SECRET=VELMIDLHY_A_TAJNY_KLUC_PRE_JWT_TOKENY_1234567890
 
 5. Otvoríme Backend na spustenie databázy
