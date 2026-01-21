@@ -8,7 +8,7 @@ Node.js, npm a MySQL
 Postup inštalácie
 
 1. Najprv treba naklonovať repozitár
-git clone gh repo clone Michal186/Rezervacia_sportovisk
+git clone https://github.com/Michal186/Rezervacia_sportovisk.git
 
 2. Presunieme sa do adresára client a naištalujeme závislosti
 cd Frontend
