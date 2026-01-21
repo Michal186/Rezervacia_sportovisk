@@ -22,7 +22,7 @@ npm install
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=cajik
-DB_NAME=rezervaciadatabase
+DB_NAME=rezervaciadatabas
 DB_PORT=3306
 
 JWT_SECRET=VELMIDLHY_A_TAJNY_KLUC_PRE_JWT_TOKENY_1234567890
