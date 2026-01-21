@@ -1,35 +1,63 @@
-Návod na inštaláciu 
+Rezervácia športovísk
+Návod na inštaláciu
 
-Tento projekt pozostáva z dvoch častí: Frontend (React/Vite) a Backend (Node.js)
+Tento projekt pozostáva z dvoch častí:
+
+Frontend – React / Vite
+
+Backend – Node.js
 
 Pred spustením projektu je potrebné mať nainštalované:
-Node.js, npm a MySQL
 
-Postup inštalácie:
+Node.js
 
-1. Najprv treba naklonovať repozitár
+npm
+
+MySQL
+
+Postup inštalácie
+1. Klonovanie repozitára
+
+Najprv je potrebné naklonovať repozitár:
+
 git clone https://github.com/Michal186/Rezervacia_sportovisk.git
 
-2. Presunieme sa do adresára client a naištalujeme závislosti
+2. Inštalácia závislostí – Frontend
+
+Presunieme sa do adresára Frontend a nainštalujeme závislosti:
+
 cd Frontend
 npm install
 
-3. Pre adresár server musíme vykonať to isté
+3. Inštalácia závislostí – Backend
+
+Pre adresár Backend vykonáme rovnaký postup:
+
 cd Backend
 npm install
 
-4. V adresári server vytvoríme .env súbor a vložíme údaje
+4. Konfigurácia databázy
+
+V adresári Backend vytvoríme súbor .env a vložíme nasledujúce údaje:
+
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=cajik
-DB_NAME=rezervaciadatabase
+DB_NAME=rezervaciadatabas
 DB_PORT=3306
+
 JWT_SECRET=VELMIDLHY_A_TAJNY_KLUC_PRE_JWT_TOKENY_1234567890
 
-5. Otvoríme Backend na spustenie databázy
-cd .\Backend\
+5. Spustenie Backend servera
+
+Backend spustíme pomocou príkazu:
+
+cd .\Backend
 node server.js
 
-6. Príprava Frontendu
-cd .\Frontend\
+6. Spustenie Frontendu
+
+Frontend spustíme pomocou:
+
+cd .\Frontend
 npm run dev
