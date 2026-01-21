@@ -210,7 +210,7 @@ app.put("/api/users/:id", verifyToken, verifyAdmin, async (req, res) => {
 
 
 /* =========================
-   ŠPORTOVISKÁ (CRUD)
+   ŠPORTOVISKÁ
 ========================= */
 
 // GET - Zoznam všetkých športovísk
@@ -263,7 +263,7 @@ app.delete("/api/sportoviska/:id", verifyToken, verifyAdmin, async (req, res) =>
   
   try {
     await db.query("DELETE FROM sportovisko WHERE id=?", [id]);
-    res.status(200).json({ message: "Športovisko vymazané" }); // Zmenené z 204 na 200, aby frontend dostal JSON ak treba
+    res.status(200).json({ message: "Športovisko vymazané" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Chyba pri mazaní športoviska" });
